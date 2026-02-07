@@ -85,7 +85,8 @@ class Sampler(nn.Module):
     def __init__(self):
         super().__init__()
 
-    @torch.compile
+    # Disabled: torch.compile on PyTorch 2.5.1 causes "Sort currently does not support bool dtype on CUDA"
+    # @torch.compile
     def forward(
         self, 
         logits: torch.Tensor, 

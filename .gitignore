@@ -231,3 +231,11 @@ PortableGit/
 proxy_config.txt
 gradio_outputs/
 acestep/third_parts/vllm/
+
+# Output files from testing
+*.txt
+!proxy_config.txt.example
+!requirements*.txt
+
+# Antigravity brain folder
+.gemini/

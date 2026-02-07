@@ -34,7 +34,8 @@ class RotaryEmbedding(nn.Module):
         cache = torch.cat((cos, sin), dim=-1).unsqueeze_(1)
         self.register_buffer("cos_sin_cache", cache, persistent=False)
 
-    @torch.compile
+    # Disabled: torch.compile on PyTorch 2.5.1 causes CUDA bool sort error
+    # @torch.compile
     def forward(
         self,
         positions: torch.Tensor,

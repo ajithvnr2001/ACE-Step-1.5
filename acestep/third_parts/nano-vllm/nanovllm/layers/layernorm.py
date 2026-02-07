@@ -13,7 +13,8 @@ class RMSNorm(nn.Module):
         self.eps = eps
         self.weight = nn.Parameter(torch.ones(hidden_size))
 
-    @torch.compile
+    # Disabled: torch.compile on PyTorch 2.5.1 causes CUDA bool sort error
+    # @torch.compile
     def rms_forward(
         self,
         x: torch.Tensor,
@@ -25,7 +26,8 @@ class RMSNorm(nn.Module):
         x = x.to(orig_dtype).mul_(self.weight)
         return x
 
-    @torch.compile
+    # Disabled: torch.compile on PyTorch 2.5.1 causes CUDA bool sort error
+    # @torch.compile
     def add_rms_forward(
         self,
         x: torch.Tensor,
