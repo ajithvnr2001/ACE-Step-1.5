@@ -75,6 +75,18 @@ def api_app():
     os.environ["ACESTEP_LM_MODEL_PATH"] = "acestep-5Hz-lm-4B"
     os.environ["ACESTEP_DOWNLOAD_SOURCE"] = "huggingface"
     
+    # CRITICAL FIX: Monkey-patch torch.argsort to handle bool tensors on CUDA
+    # The HuggingFace model uses mask.argsort() which fails on CUDA with bool dtype
+    import torch
+    _original_argsort = torch.Tensor.argsort
+    def _patched_argsort(self, *args, **kwargs):
+        if self.dtype == torch.bool and self.is_cuda:
+            # Cast to int8 before sorting, then return results
+            return _original_argsort(self.to(torch.int8), *args, **kwargs)
+        return _original_argsort(self, *args, **kwargs)
+    torch.Tensor.argsort = _patched_argsort
+    print("[Modal] Applied bool argsort CUDA fix")
+    
     # Optional: Set API key for security
     # os.environ["ACESTEP_API_KEY"] = "your-secret-key"
     
