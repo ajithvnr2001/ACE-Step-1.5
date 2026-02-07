@@ -64,6 +64,11 @@ def generate_and_download(api_url, prompt, lyrics="", vocal_language="en", think
                 result_list = json.loads(data["result"])
                 if result_list and result_list[0].get("file"):
                     audio_link = result_list[0]["file"]
+                    
+                    # Fix relative URLs by prepending the API base URL
+                    if audio_link.startswith("/"):
+                        audio_link = api_url + audio_link
+                    
                     print(f"🎉 Success! Downloading audio from {audio_link}...")
                     
                     # 3. Download Audio
