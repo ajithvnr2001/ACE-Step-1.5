@@ -5,9 +5,12 @@ import os
 app = modal.App("acestep-api")
 
 # Define the Image with dependencies (same as Gradio for consistency)
+# VERSION: 2026-02-07-v2 - torch.compile disabled for CUDA bool sort fix
 image = (
     modal.Image.from_registry("nvidia/cuda:12.4.1-devel-ubuntu22.04", add_python="3.11")
     .apt_install("git", "ffmpeg", "libgl1-mesa-glx", "libglib2.0-0")
+    # Cache-bust: Force rebuild to pick up torch.compile fixes
+    .run_commands("echo 'Build version: 2026-02-07-v2'")
     # Layer 1: Build tools
     .pip_install("packaging", "ninja", "wheel", "setuptools")
     # Layer 2: Core ML stack
